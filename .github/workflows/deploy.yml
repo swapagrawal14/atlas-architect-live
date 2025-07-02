@@ -1,0 +1,39 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install Rust & wasm-pack
+        run: |
+          rustup-init -y
+          export PATH="$HOME/.cargo/bin:$PATH"
+          cargo install wasm-pack
+
+      - name: Build Rust code to WebAssembly
+        run: wasm-pack build ./generator --target web --out-dir ./app/src/lib/wasm
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Install and Build Svelte App
+        run: |
+          cd app
+          npm install
+          npm run build
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: app/build
