@@ -62,13 +62,18 @@ export default function WorldGenerator() {
   });
 
   const [perm, setPerm] = useState(() => createPerm(config.seed));
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setPerm(createPerm(config.seed));
   }, [config.seed]);
 
   useEffect(() => {
-    draw();
+    setLoading(true);
+    setTimeout(() => {
+      draw();
+      setLoading(false);
+    }, 80); // Simulate a short loading for UX
     // eslint-disable-next-line
   }, [config, perm]);
 
@@ -125,11 +130,12 @@ export default function WorldGenerator() {
         width={config.width}
         height={config.height}
         aria-label="World elevation map"
-        style={{ border: "1px solid #bbb", background: "#fff", maxWidth: "100%" }}
+        tabIndex={0}
+        style={{ marginBottom: "2em" }}
       />
       <div className="controls">
         <label>
-          Scale:
+          Scale
           <input
             type="range"
             name="scale"
@@ -138,11 +144,12 @@ export default function WorldGenerator() {
             step="0.1"
             value={config.scale}
             onChange={handleChange}
+            aria-label="Scale"
           />
-          <span>{config.scale}</span>
+          <span style={{ fontSize: "0.97em", color: "#64748b" }}>{config.scale}</span>
         </label>
         <label>
-          Seed:
+          Seed
           <input
             type="number"
             name="seed"
@@ -150,10 +157,11 @@ export default function WorldGenerator() {
             max="100000"
             value={config.seed}
             onChange={handleChange}
+            aria-label="Seed"
           />
         </label>
         <label>
-          Octaves:
+          Octaves
           <input
             type="number"
             name="octaves"
@@ -161,9 +169,12 @@ export default function WorldGenerator() {
             max="8"
             value={config.octaves}
             onChange={handleChange}
+            aria-label="Octaves"
           />
         </label>
-        <button onClick={randomizeSeed}>Random Seed</button>
+        <button onClick={randomizeSeed} tabIndex={0}>
+          {loading ? "Generating..." : "Random Seed"}
+        </button>
       </div>
     </div>
   );
