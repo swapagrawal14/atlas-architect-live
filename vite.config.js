@@ -1,8 +1,7 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 
-// Replace 'your-repo-name' with your actual repository name
 export default defineConfig({
   plugins: [react()],
-  base: '/atlas-architect-live/', // <-- IMPORTANT!
-});
+  base: '/atlas-architect-live/',  // <-- your GitHub repo name here, with leading and trailing slash
+})
