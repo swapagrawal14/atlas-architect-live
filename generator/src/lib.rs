@@ -2,7 +2,13 @@ use wasm_bindgen::prelude::*;
 use noise::{NoiseFn, Fbm, Perlin};
 
 #[wasm_bindgen]
-pub fn generate_elevation_data(width: u32, height: u32, seed: u32, scale: f64, octaves: usize) -> Vec<f32> {
+pub fn generate_elevation_data(
+    width: u32,
+    height: u32,
+    seed: u32,
+    scale: f64,
+    octaves: usize
+) -> Vec<f32> {
     console_error_panic_hook::set_once();
     let mut fbm = Fbm::<Perlin>::new(seed);
     fbm.octaves = octaves;
