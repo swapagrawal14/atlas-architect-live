@@ -1,22 +1,17 @@
-# The Final, Bulletproof Workflow
 name: Build and Deploy Website
 
 on:
-  # Jab bhi 'main' branch mein koi change ho, tab yeh chale
   push:
     branches:
       - main
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest # Ek fresh computer par chalega
-
+    runs-on: ubuntu-latest
     steps:
-      # Step 1: Poora code download karo
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      # Step 2: Rust aur wasm-pack install karo
       - name: Install Rust Toolchain
         uses: actions-rs/toolchain@v1
         with:
@@ -25,29 +20,23 @@ jobs:
       - name: Install wasm-pack
         run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 
-      # Step 3: Rust code ko WebAssembly mein compile karo
-      - name: Build Rust to WASM
-        run: wasm-pack build ./generator --target web --out-dir ./app/src/lib/wasm
+      - name: Build Rust to WASM Package
+        # IMPORTANT CHANGE: Hum ab 'pkg' folder mein build kar rahe hain
+        run: wasm-pack build ./generator --target web --out-dir ./generator/pkg
         
-      # Step 4: Svelte App ko set up karo
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
           
-      # Step 5: Svelte App ki saari dependencies install karo
-      - name: Install Svelte Dependencies
-        working-directory: ./app # 'app' folder ke andar jaakar yeh command chalao
-        run: npm install
+      - name: Install & Build Svelte App
+        working-directory: ./app
+        run: |
+          npm install
+          npm run build
 
-      # Step 6: Svelte App ko final website mein build karo
-      - name: Build Svelte App
-        working-directory: ./app # 'app' folder ke andar jaakar yeh command chalao
-        run: npm run build
-
-      # Step 7: Final 'build' folder ko 'gh-pages' branch par daal do
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          branch: gh-pages # Is branch par deploy karo
-          folder: app/build # Yeh wala folder deploy karna hai
+          branch: gh-pages
+          folder: app/build
