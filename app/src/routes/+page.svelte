@@ -1,7 +1,8 @@
 <script>
     import { onMount } from 'svelte';
     import { browser } from '$app/environment';
-    import init, { generate_elevation_data } from '../lib/wasm/generator.js';
+    // NEECHE WALI LINE THEEK KAR DI GAYI HAI
+    import init, { generate_elevation_data } from '$lib/wasm/generator.js';
 
     let canvas;
     let isReady = false;
