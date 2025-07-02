@@ -1,8 +1,8 @@
 <script>
     import { onMount } from 'svelte';
     import { browser } from '$app/environment';
-    // NEECHE WALI LINE THEEK KAR DI GAYI HAI
-    import init, { generate_elevation_data } from '$lib/wasm/generator.js';
+    // IMPORTANT CHANGE: Ab hum package ko direct import kar rahe hain
+    import init, { generate_elevation_data } from 'generator';
 
     let canvas;
     let isReady = false;
